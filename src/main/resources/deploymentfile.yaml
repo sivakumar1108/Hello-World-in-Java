@@ -1,0 +1,45 @@
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: dev
+  labels:
+    name: dev
+
+---
+apiVersion: v1
+kind: Service
+
+metadata:
+  name: hw-service
+  namespace: dev
+spec:
+  selector:
+    service: hw-service
+  ports:
+    - name: http
+      port: 8080
+      nodePort: 30080
+  type: NodePort
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hello-world
+  namespace: dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hello-world
+  template: # pod details
+    metadata:
+      labels:
+        app: hello-world
+        service: hw-service
+    spec:
+      containers:
+        - name: hello-world
+          image: vatsan127/hello-world
+          ports:
+            - containerPort: 8080
