@@ -1,0 +1,15 @@
+owner-name: srivatsan
+
+server:
+  port: 8080
+
+spring:
+  application:
+    name: HelloWorld
+
+#app:
+#  name: ${APP_NAME:"no Name"}
+app:
+  name: ${APP_NAME:No_Name}
+
+
