@@ -23,7 +23,7 @@ public class Controller {
     @GetMapping("/")
     public ResponseEntity<String> getHelloWorld() {
         logger.info("Controller :: getHelloWorld :: TimeStamp :: {}", LocalDateTime.now());
-        return ResponseEntity.ok().body("Hello World");
+        return ResponseEntity.ok().body("Hello");
     }
 
     /*Get App info*/

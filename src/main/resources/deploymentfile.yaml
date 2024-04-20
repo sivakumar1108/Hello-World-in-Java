@@ -6,9 +6,18 @@ metadata:
     name: dev
 
 ---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: configmapv1
+  namespace: dev
+data:
+  APP_NAME: 'Hello-World Java !!!'
+
+---
+# service - NodePort
 apiVersion: v1
 kind: Service
-
 metadata:
   name: hw-service
   namespace: dev
@@ -18,8 +27,12 @@ spec:
   ports:
     - name: http
       port: 8080
+      protocol: TCP
       nodePort: 30080
   type: NodePort
+
+---
+# implement LoadBalancer
 
 ---
 apiVersion: apps/v1
@@ -40,6 +53,9 @@ spec:
     spec:
       containers:
         - name: hello-world
-          image: vatsan127/hello-world
+          image: vatsan127/hello-world:latest
           ports:
             - containerPort: 8080
+          envFrom:
+            - configMapRef:
+                name: configmapv1

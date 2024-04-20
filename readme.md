@@ -30,73 +30,61 @@ metadata:
   name: dev
   labels:
     name: dev
-    
----
-apiVersion: v1
-kind: ConfigMap
-metadata: 
-  name: configmap_v1
-data:
-  APP_NAME: 'Hello-World Java !!!'
-  
----
-# service - NodePort
-# apiVersion: v1
-# kind: Service
-# metadata:
-#   name: hw-service
-#   namespace: dev
-# spec:
-#   selector:
-#     service: hw-service
-#   ports:
-#   - name: http
-#     port: 8080
-#     protocol: TCP
-#     nodePort: 30080
-#   type: NodePort
 
 ---
-#service - LoadBalancer
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: configmapv1
+  namespace: dev
+data:
+  APP_NAME: 'Hello-World Java !!!'
+
+---
+# service - NodePort
 apiVersion: v1
 kind: Service
 metadata:
-  namespace: hw-service
+  name: hw-service
   namespace: dev
 spec:
   selector:
     service: hw-service
   ports:
-  - name: http
-    port: 8080
-    protocol: TCP  
-  type: LoadBalancer
+    - name: http
+      port: 8080
+      protocol: TCP
+      nodePort: 30080
+  type: NodePort
 
---- 
+---
+# implement LoadBalancer
+
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: hello-world
-  namespace: dev 
+  namespace: dev
 spec:
   replicas: 1
   selector:
-    matchLabels: 
+    matchLabels:
       app: hello-world
   template: # pod details
     metadata:
       labels:
         app: hello-world
         service: hw-service
-    spec: 
-      containers: 
-      - name: hello-world
-        image: vatsan127/hello-world
-        ports:
-        - containerPort: 8080
-        envFrom:
-          - configMapRef:
-            name: configmap_v1
+    spec:
+      containers:
+        - name: hello-world
+          image: vatsan127/hello-world:latest
+          ports:
+            - containerPort: 8080
+          envFrom:
+            - configMapRef:
+                name: configmapv1
 
 ```
 
